@@ -343,7 +343,7 @@ Start mining! `python run.py` 🥳
 ### Docker
 
 #### Docker Hub
-Official Docker images are on https://hub.docker.com/r/rdavidoff/twitch-channel-points-miner-v2 for `linux/amd64`, `linux/arm64` and `linux/arm/v7`.
+Unofficial Docker image is on https://hub.docker.com/r/benjammin4dayz/twitch-channel-points-miner-v2 for `linux/amd64`
 
 The following file is mounted :
 
@@ -351,9 +351,9 @@ The following file is mounted :
 
 These folders are mounted :
 
-- analytics : to save the analytics data
-- cookies : to provide login information
-- logs : to keep logs outside of container
+- appdata/analytics : to save the analytics data
+- appdata/cookies : to provide login information
+- appdata/logs : to keep logs outside of container
 
 **Example using docker-compose:**
 
@@ -362,15 +362,13 @@ version: "3.9"
 
 services:
   miner:
-    image: rdavidoff/twitch-channel-points-miner-v2
+    image: benjammin4dayz/twitch-channel-points-miner-v2
     stdin_open: true
     tty: true
     environment:
       - TERM=xterm-256color
     volumes:
-      - ./analytics:/usr/src/app/analytics
-      - ./cookies:/usr/src/app/cookies
-      - ./logs:/usr/src/app/logs
+      - ./appdata:/usr/src/app/appdata
       - ./run.py:/usr/src/app/run.py:ro
     ports:
       - "5000:5000"
@@ -379,17 +377,17 @@ services:
 **Example with docker run:**
 ```sh
 docker run \
-    -v $(pwd)/analytics:/usr/src/app/analytics \
-    -v $(pwd)/cookies:/usr/src/app/cookies \
-    -v $(pwd)/logs:/usr/src/app/logs \
+    -v $(pwd)/appdata:/usr/src/app/appdata \
     -v $(pwd)/run.py:/usr/src/app/run.py:ro \
     -p 5000:5000 \
-    rdavidoff/twitch-channel-points-miner-v2
+    benjammin4dayz/twitch-channel-points-miner-v2
 ```
 
-`$(pwd)` Could not work on Windows (cmd), please use the absolute path instead, like: `/path/of/your/cookies:/usr/src/app/cookies`.
+`$(pwd)` Could not work on Windows (cmd), please use the absolute path instead, like: `/path/of/your/cookies:/usr/src/app/appdata/cookies`.
 
-The correct solution for Windows lies in the correct command line: `docker run -v C:\Absolute\Path\To\Twitch-Channel-Points-Miner-v2\run.py:/usr/src/app/run.py:ro rdavidoff/twitch-channel-points-miner-v2`.
+The correct solution for Windows lies in the correct command line: `docker run -v C:\Absolute\Path\To\Twitch-Channel-Points-Miner-v2\run.py:/usr/src/app/run.py:ro benjammin4dayz/twitch-channel-points-miner-v2`.
+
+When using Git Bash for Windows, add a leading `/` to each`$(pwd)` to prevent POSIX path conversion. See [this issue](https://stackoverflow.com/questions/50608301/docker-mounted-volume-adds-c-to-end-of-windows-path-when-translating-from-linux) for more details
 
 `run.py` MUST be mounted as a volume (`-v`).
 
@@ -398,11 +396,11 @@ If you don't mount the volume for the analytics (or cookies or logs) folder, the
 If you don't have a cookie or it's your first time running the script, you will need to login to Twitch and start the container with `-it` args. If you need to run multiple containers you can bind different ports (only if you need also the analytics) and mount dirrent run.py file, like
 
 ```sh
-docker run --name user1 -v $(pwd)/user1.py:/usr/src/app/run.py:ro -p 5001:5000 rdavidoff/twitch-channel-points-miner-v2
+docker run --name user1 -v $(pwd)/user1.py:/usr/src/app/run.py:ro -p 5001:5000 benjammin4dayz/twitch-channel-points-miner-v2
 ```
 
 ```sh
-docker run --name user2 -v $(pwd)/user2.py:/usr/src/app/run.py:ro -p 5002:5000 rdavidoff/twitch-channel-points-miner-v2
+docker run --name user2 -v $(pwd)/user2.py:/usr/src/app/run.py:ro -p 5002:5000 benjammin4dayz/twitch-channel-points-miner-v2
 ```
 
 #### Portainer
@@ -670,17 +668,18 @@ twitch_miner.mine(followers=True, blacklist=["user1", "user2"])
 
 ### `enable_analytics` option in `twitch_minerfile` toggles Analytics needed for the `analytics()` method
 
-Disabling Analytics significantly reduces memory consumption and saves some disk space by not creating and writing `/analytics/*.json`.
+Disabling Analytics significantly reduces memory consumption and saves some disk space by not creating and writing `appdata/analytics/*.json`.
 
 Set this option to `True` if you need Analytics. Otherwise set this option to `False` (default value).
 
 ## Migrating from an old repository (the original one):
-If you already have a `twitch-cookies.pkl` and you don't want to log in again, please create a `cookies/` folder in the current directory and then copy the .pkl file with a new name `your-twitch-username.pkl`
+If you already have a `twitch-cookies.pkl` and you don't want to log in again, please create a `appdata/cookies/` folder in the current directory and then copy the .pkl file with a new name `your-twitch-username.pkl`
+
 ```
-.
-+-- run.py
-+-- cookies
-|   +-- your-twitch-username.pkl
+├───run.py
+└───appdata
+    └───cookies
+        └───your-twitch-username.pkl
 ```
 
 ## Windows
