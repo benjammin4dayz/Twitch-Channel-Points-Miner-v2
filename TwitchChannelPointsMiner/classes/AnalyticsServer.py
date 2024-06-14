@@ -249,7 +249,7 @@ class AnalyticsServer(Thread):
             # Get the last received log index from the client request parameters
             last_received_index = int(request.args.get("lastIndex", last_sent_log_index))
 
-            logs_path = os.path.join(Path().absolute(), "logs")
+            logs_path = os.path.join(Path().absolute(), "appdata/logs")
             log_file_path = os.path.join(logs_path, f"{username}.log")
             try:
                 with open(log_file_path, "r", encoding="utf-8") as log_file:

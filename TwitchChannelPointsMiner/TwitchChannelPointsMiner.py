@@ -122,7 +122,7 @@ class TwitchChannelPointsMiner:
 
         if enable_analytics is True:
             Settings.analytics_path = os.path.join(
-                Path().absolute(), "analytics", username
+                Path().absolute(), "appdata/analytics", username
             )
             Path(Settings.analytics_path).mkdir(parents=True, exist_ok=True)
 

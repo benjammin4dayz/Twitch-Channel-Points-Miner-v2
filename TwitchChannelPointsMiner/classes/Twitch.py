@@ -63,7 +63,7 @@ class Twitch(object):
     ]
 
     def __init__(self, username, user_agent, password=None):
-        cookies_path = os.path.join(Path().absolute(), "cookies")
+        cookies_path = os.path.join(Path().absolute(), "appdata/cookies")
         Path(cookies_path).mkdir(parents=True, exist_ok=True)
         self.cookies_file = os.path.join(cookies_path, f"{username}.pkl")
         self.user_agent = user_agent

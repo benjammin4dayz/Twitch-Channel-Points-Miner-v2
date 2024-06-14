@@ -150,6 +150,7 @@ logs/*
 screenshots/*
 htmls/*
 analytics/*
+appdata/*
 
 # Replit
 keep_replit_alive.py
