@@ -156,7 +156,7 @@ def json_all():
         json.dumps(
             [
                 {
-                    "name": streamer.strip(".json"),
+                    "name": streamer[:-5] if streamer.endswith(".json") else streamer,
                     "data": read_json(streamer, return_response=False),
                 }
                 for streamer in streamers_available()
